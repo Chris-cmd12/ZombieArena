@@ -10,32 +10,29 @@ TextureHolder::TextureHolder()
 
 Texture& TextureHolder::GetTexture(string const& filename)
 {
-	// Get a reference to m_Textures using m_s_Instance
+	// Récupérer la référence de m_Texture en utilisant m_s_Instance
 	auto& m = m_s_Instance->m_Textures;
-	// auto is the equivalent of map<string, Texture>::iterator
+	// auto est l'équivalent de map<string, Texture>::iterator
 
-	// Create an iterator to hold a key-value-pair (kvp)
-	// and search for the required kvp
-	// using the passed in file name
+	// Créer un itérateur pour stocker key-value-pair (kvp)
+	// et récupérer le kvp correspondant à la clé filename
 	auto keyValuePair = m.find(filename);
-	// auto is the equivalent of map<string, Texture>::iterator
 	
-	// Did we find a match?
+	// est ce que la clé a été trouvé ?
 	if (keyValuePair != m.end())
 	{
-		// Yes
-		// Return the texture, the second part of the kvp, the texture
-		// the second part of the kvp, the texture
+		// Si oui
+		// Retourner la texture, la second partie du kvp
 		return keyValuePair->second;
 	}
 	else
 	{
-		// File name not found
-		// Create a new key value pair using the filename
+		// sinon
+		// Create une nouvelle kvp en utilisant un filename
 		auto& texture = m[filename];
-		// Load the texture from file in the usual way
+		// Loadé la texture à partir du fichier 
 		texture.loadFromFile(filename);
-		// Return the texture to the calling code
+		// Retourner la texture
 		return texture;
 	}
 }

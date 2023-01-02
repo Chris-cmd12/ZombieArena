@@ -6,95 +6,98 @@ using namespace sf;
 class Player
 {
 private:
+	// Constante initiale de la vitesse et de la vie du joueur
 	const float START_SPEED = 200;
 	const float START_HEALTH = 100;
-	// Where is the player
+	
+	// Ou ce positionne le joueur 
 	Vector2f m_Position;
 
-	// Of course we will need a sprite
+	// Sprite du joueur
 	Sprite m_Sprite;
 
-	// And a texture
+	// La texture du joueur
 	Texture m_Texture;
 
-	// What is the screen resolution
+	// La résolution de la fenêtre de jeu
 	Vector2f m_Resolution;
 
-	// What size is the current arena
+	// Taille de l'arene
 	IntRect m_Arena;
 
-	// How many tiles make up the arena
+	// Le nombre de tile pour faire la taille de l'arene
 	int m_TileSize;
 
-	// Which direction is the player currently moving in
+	// Direction de déplacement du joueur
 	bool m_UpPressed;
 	bool m_DownPressed;
 	bool m_LeftPressed;
 	bool m_RightPressed;
 
-	// How much health has the player got
+	// Vie du joueur
 	int m_Health;
 	
-	// How much max health has the player got
+	// La vie max que le joueur peut avoir
 	int m_MaxHealth;
 
-	// When was the player last hit
+	// Quand le joueur a t'il été touché la dernier fois ?
 	Time m_LastHit;
 	
-	// Speed in pixels per second
+	// Vitesse du joueur
 	float m_Speed;
 	
 public:
 	Player();
 
+	// Fonction pour initialiser la position du joueur 
 	void spawn(IntRect arena, Vector2f resolution, int tileSize);
 
-	// Call this at the end of every game
+	// Methode appellé a chaque fin de jeu 
 	void resetPlayerStats();
 	
-	// Handle the player getting hit by a zombie
+	// Gérer le fait que le joueur a été touché
 	bool hit(Time timeHit);
 
-	// How long ago was the player last hit
+	// Récupérer la dernière fois que le joueur a été touché
 	Time getLastHitTime();
 
-	// Where is the player
+	// Fonction pour recuperer la position du joueur
 	FloatRect getPosition();
 	
-	// Where is the center of the player
+	// Ou ce trouve le centre du joueur
 	Vector2f getCenter();
 	
-	// Which angle is the player facing
+	// Quele angle le joueur est t'il orienté
 	float getRotation();
 	
-	// Send a copy of the sprite to the main function
+	// Récupéer le sprite du joueur pour le dessiner
 	Sprite getSprite();
 	
-	// Next 4 functions move the player
+	// 4 fonction de déplacement du joueur 
 	void moveLeft();
 	void moveRight();
 	void moveUp();
 	void moveDown();
 
-	// Stop the player moving in a specific direction
+	// Fonction pour arréter le déplacement du joueur
 	void stopLeft();
 	void stopRight();
 	void stopUp();
 	void stopDown();
 	
-	// We will call this function once every frame
+	// Mettre a jour la position du joueur a chaque frame
 	void update(float elapsedTime, Vector2i mousePosition);
 	
-	// Give the player a speed boost
+	// Augmenter la vitesse du joueur
 	void upgradeSpeed();
 
-	// Give the player some health
+	// Augmenter la vie du joueur
 	void upgradeHealth();
 	
-	// Increase the maximum amount of health the player can have
+	// Augmenter la capcité du chargeur du joueur
 	void increaseHealthLevel(int amount);
 	
-	// How much health has the player currently got
+	// Recupérer la vie actuelle du joueur
 	int getHealth();
 };
 

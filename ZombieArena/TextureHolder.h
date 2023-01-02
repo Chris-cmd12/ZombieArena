@@ -12,16 +12,18 @@ using namespace std;
 class TextureHolder
 {
 private:
-	// A map container from the STL,
-	// that holds related pairs of string and Texture
+	// A map container de STL,
+	// qui lie chaque string à un objet Texture
 	map<string, Texture> m_Textures;
 
-	// A pointer of the same type as the class itself
-	// the one and only instance
+	// Un pointer a la clase TextureHolder
 	static TextureHolder* m_s_Instance;
 
 public:
+	// Constructeur de TextureHolder
 	TextureHolder();
+	
+	// Retourne une référence vers le seul objet TextureHolder
 	static Texture& GetTexture(string const& filename);
 };
 

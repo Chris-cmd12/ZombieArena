@@ -11,46 +11,45 @@ Player::Player() {
 	m_Health = START_HEALTH;
 	m_MaxHealth = START_HEALTH;
 
-	// Associate a texture with the sprite
+	// Associer le sprite au texture
 	m_Sprite = Sprite(TextureHolder::GetTexture("graphics/player.png"));
-	// Set the origin of the sprite to the center,
-	// for smooth rotation
+	// Set l'origin au centre du sprite
 	m_Sprite.setOrigin(25, 25);
 }
 
-// Spawn the player in the middle of the arena
+// Faire spawn le joueur au centre de l'arene
 void Player::spawn(IntRect arena, Vector2f resolution, int tileSize) {
-	// Place the player in the middle of the arena
+	// Place le joeur milieu de l'arene
 	m_Position.x = arena.width / 2;
 	m_Position.y = arena.height / 2;
 
-	// Copy the details of the arena to the player's m_Arena
+	// Copie les detail de l'arene dans m_Arena
 	m_Arena.left = arena.left;
 	m_Arena.width = arena.width;
 	m_Arena.top = arena.top;
 	m_Arena.height = arena.height;
 
-	// Remember how big the tiles are in this arena
+	// Garder la taille de la tile
 	m_TileSize = tileSize;
 
-	// Store the resolution for future use
+	// Garder la resolution
 	m_Resolution.x = resolution.x;
 	m_Resolution.y = resolution.y;
 }
 
-// Reset the player's stats at the start of a new game
+// Réinitialiser le joueur à la fin de la partie
 void Player::resetPlayerStats() {
 	m_Speed = START_SPEED;
 	m_Health = START_HEALTH;
 	m_MaxHealth = START_HEALTH;
 }
 
-// Last hit time
+// Dernier fois que le joueur a été touché
 Time Player::getLastHitTime() {
 	return m_LastHit;
 }
 
-// Handle the player getting hit by a zombie
+// Gestion de joueur ce faisant toucher par un énemis
 bool Player::hit(Time timeHit) {
 	if (timeHit.asMilliseconds() - m_LastHit.asMilliseconds() > 200) {
 		m_LastHit = timeHit;
@@ -62,32 +61,32 @@ bool Player::hit(Time timeHit) {
 	}
 }
 
-// Where is the player
+// Ou ce trouve le joueur
 FloatRect Player::getPosition() {
 	return m_Sprite.getGlobalBounds();
 }
 
-// Where is the center of the player
+// Ou ce trouve le centre du joueur
 Vector2f Player::getCenter() {
 	return m_Position;
 }
 
-// What angle is the player facing
+// Quelle angle le joueur est t'il orienté
 float Player::getRotation() {
 	return m_Sprite.getRotation();
 }
 
-// Send a copy of the sprite to main
+// Envoie une copie de la texture du joueur
 Sprite Player::getSprite() {
 	return m_Sprite;
 }
 
-// Get the player's current health
+// Recupérer la vie du joueur
 int Player::getHealth() {
 	return m_Health;
 }
 
-// Move the player
+// Dépalcement du joueur
 void Player::moveLeft() {
 	m_LeftPressed = true;
 }
@@ -104,7 +103,7 @@ void Player::moveDown() {
 	m_DownPressed = true;
 }
 
-// Stop the player moving in a specific direction
+// Arréter son déplacement
 void Player::stopLeft() {
 	m_LeftPressed = false;
 }
@@ -121,7 +120,7 @@ void Player::stopDown() {
 	m_DownPressed = false;
 }
 
-// We will call this function once every frame
+// Mettre a jour le joueur a chaque frame
 void Player::update(float elapsedTime, Vector2i mousePosition) {
 	if (m_UpPressed) {
 		m_Position.y -= m_Speed * elapsedTime;
@@ -141,7 +140,7 @@ void Player::update(float elapsedTime, Vector2i mousePosition) {
 	
 	m_Sprite.setPosition(m_Position);
 	
-	// Keep the player in the arena
+	// Gérer la collision avec l'arene
 	if (m_Position.x > m_Arena.width - m_TileSize) {
 		m_Position.x = m_Arena.width - m_TileSize;
 	}
@@ -158,7 +157,7 @@ void Player::update(float elapsedTime, Vector2i mousePosition) {
 		m_Position.y = m_Arena.top + m_TileSize;
 	}
 
-	// Calculate the angle the player is facing
+	// Calculer l'angle de rotation du joueur
 	float angle = (atan2(mousePosition.y - m_Resolution.y / 2,
 		mousePosition.x - m_Resolution.x / 2) 
 		* 180) / 3.141;
@@ -166,23 +165,23 @@ void Player::update(float elapsedTime, Vector2i mousePosition) {
 	m_Sprite.setRotation(angle);
 }
 
-// Give the player a speed boost
+// SpeedBoost
 void Player::upgradeSpeed() {
-	// 20% speed upgrade
+	// 20% vitesse en plus
 	m_Speed += (START_SPEED * .2);
 }
 
-// Give the player some health
+// Améliorer la santé
 void Player::upgradeHealth() {
-	// 20% max health upgrade
+	// 20% de santé en plus
 	m_MaxHealth += (START_HEALTH * .2);
 }
 
-// Increase the maximum amount of health the player can have
+// Augmenter la taille du chargeur
 void Player::increaseHealthLevel(int amount) {
 	m_Health += amount;
 
-	// But not beyond the maximum
+	// Mais pas au-delà du maximum
 	if (m_Health > m_MaxHealth) {
 		m_Health = m_MaxHealth;
 	}

@@ -16,60 +16,61 @@ using namespace std;
 
 int main() 
 {
-	// Here is the instance of TextureHolder
+	// Instancier un objet de la classe TextureHolder
 	TextureHolder holder;
 	
-	// The game will always be in one of four states
+	// 4 différents états du jeu
 	enum class State{ PAUSED, LEVELING_UP, GAME_OVER, PLAYING };
-	// Start with the GAME_OVER state
+	// Le jeu commence dans l'état GAME_OVER
 	State state = State::GAME_OVER;
 	
-	// Get the screen resolution and create an SFML window
+	// Résolution de la fenêtre
 	Vector2f resolution;
 	resolution.x = 800;
 	resolution.y = 800;
 	
 	RenderWindow window(VideoMode(resolution.x, resolution.y), "Zombie Arena");
 	
-	// Create an SFML View for the main action
+	// Création de la vue principale
 	View mainView(sf::FloatRect(0, 0, resolution.x, resolution.y));
 	
-	// Create a clock for timing everything
+	// Creation d'un objet Clock pour mesurer le temps
 	Clock clock;
-	// How long has the PLAYING state been active
+	// Temps écoulé depuis que le jeu est dans l'état PLAYING
 	Time gameTimeTotal;
 
-	// Where is the mouse in relation to world coordinates
+	// Ou ce trouve la souris par rapport aux coordonnées du monde
 	Vector2f mouseWorldPosition;
-	// Where is the mouse in relation to screen coordinates
+	// Ou ce trouve la souris par rapport aux coordonnées de la fenêtre
 	Vector2i mouseScreenPosition;
 
-	// Create an instance of the Player class
+	// Création d'un objet Player
 	Player player;
 	
-	// The boundaries of the arena
+	// Bordure de l'arene
 	IntRect arena;
 
-	// Create the background
+	// Création d'un background
 	VertexArray background;
-	// Load a texture for the background
+	// Load la texture du background
 	Texture textureBackground = TextureHolder::GetTexture("graphics/background_sheet.png");
 	
+	// Variables pour le nombre de zombies
 	int numZombies;
 	int numZombiesAlive;
 	Zombie* zombies = nullptr;
 	
-	// 100 bullets should do
+	// Variable pour le nombre de munitions
 	Bullet bullets[100];
 	int currentBullet = 0;
 	int bulletsSpare = 24;
 	int bulletsInClip = 6;
 	int clipSize = 6;
 	float fireRate = 1;
-	// When was the fire button last pressed?
+	// Quand le joueur a t'il tiré la dernière fois ?
 	Time lastPressed;
 	
-	// hide the mouse pointer and replace it with crosshair
+	// Cacher le pointeur de la souris et le remplacer par un curseur
 	window.setMouseCursorVisible(false);
 	Sprite spriteCrosshair;
 	Texture textureCrosshair = TextureHolder::GetTexture("graphics/crosshair.png");
@@ -77,34 +78,34 @@ int main()
 	spriteCrosshair.setTexture(textureCrosshair);
 	spriteCrosshair.setOrigin(25, 25);
 
-	// Creat a couple of pickups
+	// Associer les pickups avec un type
 	Pickup healthPickup(1);
 	Pickup ammoPickup(2);
 
-	// About the game
+	// initialisation du scord et du meilleur score
 	int	score = 0;
 	int hiScore = 0;
 
-	// For the home/game over screen
+	// Pour la fenetre d'acceuil et de game over
 	Sprite spriteGameOver;
 	Texture textureGameOver = TextureHolder::GetTexture("graphics/background.png");
 	spriteGameOver.setTexture(textureGameOver);
 	spriteGameOver.setPosition(0, 0);
 	
-	// Create a view for the HUD
+	// HUD
 	View hudView(sf::FloatRect(0, 0, resolution.x, resolution.y));
 
-	// Create a sprite for the ammo icon
+	// Icon de munition
 	Sprite spriteAmmoIcon;
 	Texture textureAmmoIcon = TextureHolder::GetTexture("graphics/ammo_icon.png");
 	spriteAmmoIcon.setTexture(textureAmmoIcon);
 	spriteAmmoIcon.setPosition(20, 490);
 
-	// Load the font
+	// Load font
 	Font font;
 	font.loadFromFile("fonts/zombiecontrol.ttf");
 
-	// Paused
+	// Pause
 	Text pausedText;
 	pausedText.setFont(font);
 	pausedText.setCharacterSize(40);
@@ -120,7 +121,7 @@ int main()
 	gameOverText.setPosition(280, 540);
 	gameOverText.setString("Press Enter to play");
 
-	// Leveling Up
+	// Niveau augmenter
 	Text levelUpText;
 	levelUpText.setFont(font);
 	levelUpText.setCharacterSize(40);
@@ -136,7 +137,7 @@ int main()
 		"\n6- More and better ammo pickups";
 	levelUpText.setString(levelUpStream.str());
 
-	// Ammo
+	// munition
 	Text ammoText;
 	ammoText.setFont(font);
 	ammoText.setCharacterSize(28);
@@ -150,7 +151,7 @@ int main()
 	scoreText.setFillColor(Color::White);
 	scoreText.setPosition(10, 0);
 	
-	// Load the high score from a text file
+	// CHarger le fichier du meilleur score
 	ifstream inputFile("gamedata/scores.txt");
 	if (inputFile.is_open())
 	{
@@ -158,7 +159,7 @@ int main()
 		inputFile.close();
 	}
 
-	// Hi Score
+	// Meilleur score
 	Text hiScoreText;
 	hiScoreText.setFont(font);
 	hiScoreText.setCharacterSize(25);
@@ -168,7 +169,7 @@ int main()
 	s << "Hi Score:" << hiScore;
 	hiScoreText.setString(s.str());
 
-	// Zombies remaining
+	// Enemie manquand
 	Text zombiesRemainingText;
 	zombiesRemainingText.setFont(font);
 	zombiesRemainingText.setCharacterSize(22);
@@ -176,7 +177,7 @@ int main()
 	zombiesRemainingText.setPosition(975, 310);
 	zombiesRemainingText.setString("Zombies: 100");
 
-	// Wave number
+	// Vague enemie
 	int wave = 0;
 	Text waveNumberText;
 	waveNumberText.setFont(font);
@@ -185,72 +186,72 @@ int main()
 	waveNumberText.setPosition(20, 310);
 	waveNumberText.setString("Wave: 0");
 
-	// Health
+	// Bare de vie 
 	RectangleShape healthBar;
 	healthBar.setFillColor(Color::Red);
 	healthBar.setPosition(150, 310);
 	
-	// When did we last update the HUD
+	// QUand on a update le HUD la dernier foi
 	int framesSinceLastHUDUpdate = 0;
 
 	// How often (in frames) should we update the HUD
 	int fpsMeasurementFrameInterval = 1000;
 
-	// Prepare the hit sound
+	// Préparer le son toucher des énemis
 	SoundBuffer hitBuffer;
 	hitBuffer.loadFromFile("sound/hit.wav");
 	Sound hit;
 	hit.setBuffer(hitBuffer);
 
-	// Prepare the splat sound
+	// Préparer le son des mort des énemis
 	SoundBuffer splatBuffer;
 	splatBuffer.loadFromFile("sound/splat.wav");
 	Sound splat;
 	splat.setBuffer(splatBuffer);
 
-	// Prepare the shoot sound
+	// Préparer le son de tir
 	SoundBuffer shootBuffer;
 	shootBuffer.loadFromFile("sound/shoot.wav");
 	Sound shoot;
 	shoot.setBuffer(shootBuffer);
 
-	// Prepare the reload sound
+	// Préparer le son de recharge
 	SoundBuffer reloadBuffer;
 	reloadBuffer.loadFromFile("sound/reload.wav");
 	Sound reload;
 	reload.setBuffer(reloadBuffer);
 
-	// Prepare the failed sound
+	// Préparer le son de recharge loupé
 	SoundBuffer reloadFailedBuffer;
 	reloadFailedBuffer.loadFromFile("sound/reload_failed.wav");
 	Sound reloadFailed;
 	reloadFailed.setBuffer(reloadFailedBuffer);
 	
-	// Prepare the powerup sound
+	// Préparer le son de power up
 	SoundBuffer powerupBuffer;
 	powerupBuffer.loadFromFile("sound/powerup.wav");
 	Sound powerup;
 	powerup.setBuffer(powerupBuffer);
 
-	// Prepare the pickup sound
+	// Préparer le son des pickup
 	SoundBuffer pickupBuffer;
 	pickupBuffer.loadFromFile("sound/pickup.wav");
 	Sound pickup;
 	pickup.setBuffer(pickupBuffer);
 		
-	// The main game loop
+	// main game loop
 	while (window.isOpen()) {
 		
 		/*
 		************************ 
-		Handle the players input
+		Gestion des input
 		************************
 		*/ 
 		
 		Event event;
 		while (window.pollEvent(event))
 		{
-			// Pause game while playing
+			// Pause le jeux quand on appuie sur la touche Entré
 			if (event.type == Event::KeyPressed)
 			{
 				if (event.key.code == Keyboard::Return && state == State::PLAYING)
@@ -258,29 +259,29 @@ int main()
 					state = State::PAUSED;
 				}
 
-				// Restart while paused
+				// Restart quand le jeu et en pause
 				else if (event.key.code == Keyboard::Return && state == State::PAUSED)
 				{
 					state = State::PLAYING;
-					// Reset the clock so there isn't a frame jump
+					// Reset la cloque pour qu'il n'y a pas de bon d'image
 					clock.restart();
 				}
 
-				// Start a new game while in GAME_OVER state
+				// Lancer une nouvelle partie si le jeux et dans l'état GAME_OVER
 				else if (event.key.code == Keyboard::Return && state == State::GAME_OVER)
 				{
 					state = State::LEVELING_UP;
 					wave = 0;
 					score = 0;
 
-					// Prepare the gun and ammo for next game
+					// Prépare l'arme et les munitions pour la nouvelle partie
 					currentBullet = 0;
 					bulletsSpare = 24;
 					bulletsInClip = 6;
 					clipSize = 6;
 					fireRate = 1;
 
-					// Reset the player's stats
+					// Reset le joueur
 					player.resetPlayerStats();
 				}
 				
@@ -291,37 +292,37 @@ int main()
 					{
 						if (bulletsSpare >= clipSize)
 						{
-							// Plenty of bullets. Reload.
+							// On a assez de munitions pour recharger le chargeur
 							bulletsInClip = clipSize;
 							bulletsSpare -= clipSize;
 							reload.play();
 						}
 						else if (bulletsSpare > 0)
 						{
-							// Only few bullets left
+							// Balle restante dans le chargeur
 							bulletsInClip = bulletsSpare;
 							bulletsSpare = 0;
 							reload.play();
 						}
 						else
 						{
-							// Reload impossible
+							// Rchargement impossible
 							reloadFailed.play();
 						}
 					}
 				}
 			}
-		}	// End event polling
+		}
 		
-		// Handle the players quitting
+		// Gerer les input pour quitter le jeu
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
 			window.close();
 		}
 		
-		// Handle controls while playing
+		// Gerer les input quand on est en cour de jeu 
 		if (state == State::PLAYING){
-			// Handle the pressing and releasing of the ZQSD keys
+			// Gestion des input pour le déplacement du joueur ZQSD
 			if (Keyboard::isKeyPressed(Keyboard::Z))
 			{
 				player.moveUp();
@@ -358,12 +359,12 @@ int main()
 				player.stopRight();
 			}
 
-			// Fire a bullet
+			// Tirer une balle
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
 				if (gameTimeTotal.asMilliseconds() - lastPressed.asMilliseconds() > 1000 / fireRate && bulletsInClip > 0)
 				{
-					// Pass the centre of the player and the centre of the crosshair to the shoot function
+					//Passer le centre du joueur et le centre du crosshair dans la fonction shoot
 					bullets[currentBullet].shoot(player.getCenter().x, player.getCenter().y, mouseWorldPosition.x, mouseWorldPosition.y);
 					
 					currentBullet++;
@@ -377,62 +378,62 @@ int main()
 
 					bulletsInClip--;
 				}
-			} // End fire a bullet
+			} 
 
-		}// End WASD while playing
+		}
 		
-		// Handle the levelling up state
+		// Gerer l'état LEVELING_UP
 		if (state == State::LEVELING_UP)
 		{
-			// Handle the player levelling up
+			// Gerer les input pour augmenter les stats du joueur
 			if (event.key.code == Keyboard::Num1)
 			{
-				// Increase fire rate
+				// augmenter la cadence de tire
 				fireRate++;
 				state = State::PLAYING;
 			}
 			
 			if (event.key.code == Keyboard::Num2)
 			{
-				// Increase clip size
+				// Augmenter la capaciter du chargeur
 				clipSize += clipSize;
 				state = State::PLAYING;
 			}
 			
 			if (event.key.code == Keyboard::Num3)
 			{
-				// Increase health
+				// Augmenter la vie du joueur
 				player.upgradeHealth();
 				state = State::PLAYING;
 			}
 
 			if (event.key.code == Keyboard::Num4)
 			{
-				// Increase speed
+				// Augmenter la vitesse du joueur
 				player.upgradeSpeed();
 				state = State::PLAYING;
 			}
 
 			if (event.key.code == Keyboard::Num5)
 			{
-				// Increase health pickup
+				// Augmenter le taux de soin
 				healthPickup.upgrade();
 				state = State::PLAYING;
 			}
 
 			if (event.key.code == Keyboard::Num6)
 			{
-				// Increase ammo pickup
+				// Augmenter le taux de munitions
 				ammoPickup.upgrade();
 				state = State::PLAYING;
 			}
 			
 			if (state == State::PLAYING)
 			{
-				// Increase the wave number
+				// Augmenter le nombre de vague
 				wave++;
 
-				// Prepare the level
+				// Preparer le niveau
 				arena.width = 500 * wave;
 				arena.height = 500* wave;
 				arena.left = 0;
@@ -440,62 +441,62 @@ int main()
 				
 				int tileSize = createBackground(background, arena);
 
-				// Spawn the player in the middle of the arena
+				// Faire spawn le joueur au milieu de l'aréne
 				player.spawn(arena, resolution, tileSize);
 
-				// Configure the pickups
+				// Configurer les pickup
 				healthPickup.setArena(arena);
 				ammoPickup.setArena(arena);
 
-				// Create a horde of zombies
+				// Crée un horde d'énemie
 				numZombies = 5 * wave;
 
-				// Delete the previously allocated memory (if it exists)
+				// Suprimer les précédent mémoire loué
 				delete[] zombies;
 				zombies = createHorde(numZombies, arena);
 				numZombiesAlive = numZombies;
 
-				// Play the powerup sound
+				// Jouer le son du power up
 				powerup.play();
 				
-				// Reset the clock so there isn't a frame jump
+				// Reset la clock pour eviter les saut d'image
 				clock.restart();
 			}
-		}// End levelling up
+		}
 
 		/*
 		*********************
-		Update the frame time
+		Mettre a jour les frame
 		**********************
 		*/
 
 		if (state == State::PLAYING) {
-			// update the delta time
+			// Metre a jour le delta time
 			Time dt = clock.restart();
-			// update the total game time
+			// Mettre a jour le temps total du jeu
 			gameTimeTotal += dt;
-			// Make a decimal fraction of 1 from the delta time
+			// Fraction decimale de 1 sur le delta time
 			float dtAsSeconds = dt.asSeconds();
 			
-			// Where is the mouse pointer
+			// Ou est pointer la souris 
 			mouseScreenPosition = Mouse::getPosition();
 			
-			// Convert mouse position to world coordinates of mainView
+			// Convertir la position de la souris en coordonné du monde
 			mouseWorldPosition = window.mapPixelToCoords(Mouse::getPosition(), mainView);
 			
-			// Set the crosshair to the mouse world location
+			// Mettre le crosshair a la position de la souris
 			spriteCrosshair.setPosition(mouseWorldPosition);
 
-			//Update the player
+			// Mettre a jour le joueur 
 			player.update(dtAsSeconds, Mouse::getPosition());
 			
-			// Make a note of the players new position
+			// Prendre en note la nouvelle position du joueur 
 			Vector2f playerPosition(player.getCenter());
 			
-			// Make the view center around the player
+			// Mettre la vue principale au centre du joueur
 			mainView.setCenter(player.getCenter());
 
-			// Loop through each zombie and update them
+			// Bovule pour chaque énemis
 			for (int i = 0; i < numZombies; i++)
 			{
 				if (zombies[i].isAlive())
@@ -504,7 +505,7 @@ int main()
 				}
 			}
 
-			// Update the bullets that are in flight
+			// Mettre a jour les balles 
 			for (int i = 0; i < 100; i++)
 			{
 				if (bullets[i].isInFlight())
@@ -513,12 +514,12 @@ int main()
 				}
 			}
 
-			// Update the pickups
+			//	Mettre a jour les pickup
 			healthPickup.update(dtAsSeconds);
 			ammoPickup.update(dtAsSeconds);
 	
-			// Collision detection
-			// Have any zombies been shot?
+			// Deterction des collision
+			// Est ce que l'énemis a été touché
 			for (int i = 0; i < 100; i++) {
 				for (int j = 0; j < numZombies; j++)
 				{
@@ -526,13 +527,13 @@ int main()
 					{
 						if (bullets[i].getPosition().intersects(zombies[j].getPosition()))
 						{
-							// Stop the bullet
+							// Stop de la balle
 							bullets[i].stop();
 
-							// Register the hit and see if it was a kill
+							// Enregitrer le point de contact et verifier si l'enemis est mort
 							if (zombies[j].hit())
 							{
-								// No just a hit but a kill
+								// Si mort
 								score += 10;
 								if (score >= hiScore)
 								{
@@ -541,27 +542,27 @@ int main()
 
 								numZombiesAlive--;
 								
-								// When all the zombies are dead
+								// quand les enemis sont mort
 								if (numZombiesAlive == 0)
 								{
 									state = State::LEVELING_UP;
 								}
-								// Make a splat sound
+								// jouer le sont de mort
 								splat.play();
 							}
 						}
 					}
 				}
-			} // End zombie being shot
+			} 
 			
-			// Have any Zombie touched the player
+			// Faire que tout les zombie a toucher le joueur
 			for (int i = 0; i < numZombies; i++)
 			{
 				if (player.getPosition().intersects(zombies[i].getPosition()) && zombies[i].isAlive())
 				{
 					if (player.hit(gameTimeTotal))
 					{
-						// More here later
+						// Jouer le son de toucher
 						hit.play();
 					}
 
@@ -573,32 +574,32 @@ int main()
 						outputFile.close();
 					}
 				}
-			} // End player touched
+			} 
 
-			// Has the player touched the health pickup
+			//	Est ce que le joueur a toucher un kit de soin
 			if (player.getPosition().intersects(healthPickup.getPosition()) && healthPickup.isSpawned())
 			{
 				player.increaseHealthLevel(healthPickup.gotIt());
-				// Play a sound
+				// jouer le son du pickup
 				pickup.play();
 			}
 
-			// Has the player touched the ammo pickup
+			// Est ce que le joueur a toucher un kit de munition
 			if (player.getPosition().intersects(ammoPickup.getPosition()) && ammoPickup.isSpawned())
 			{
 				bulletsSpare += ammoPickup.gotIt();
-				// Play a sound
+				// Jouer le sond de recharge
 				reload.play();
 			}
 
-			// Size up the health bar
+			// Taille de la barre de vie
 			healthBar.setSize(Vector2f(player.getHealth() * 1.5, 35));
 
-			// Increment the number of frames since the last HUD calculation
+			// Incrementer le nombre de frames depuis le dernier calcul du HUD
 			framesSinceLastHUDUpdate++;
-			// Calculate FPS every m_FramesPerHUDUpdate frames
+			// Calculer les FPS tou les m_FramesPerHUDUpdate frames
 			if (framesSinceLastHUDUpdate > fpsMeasurementFrameInterval) {
-				// Update the HUD text
+				// Mettre a jour le text du HUD
 				std::stringstream ssAmmo;
 				std::stringstream ssScore;
 				std::stringstream ssHiScore;
@@ -609,35 +610,35 @@ int main()
 				std::stringstream ssMouseX;
 				std::stringstream ssMouseY;
 
-				// Update the ammo text
+				// Mettre à jour les munition
 				ssAmmo << bulletsInClip << "/" << bulletsSpare;
 				ammoText.setString(ssAmmo.str());
 
-				// Update the score text
+				// Mettre à jour les score
 				ssScore << "Score:" << score;
 				scoreText.setString(ssScore.str());
 
-				// Update the hi score text
+				// Mettre à jour les meilleur score
 				ssHiScore << "Hi Score:" << hiScore;
 				hiScoreText.setString(ssHiScore.str());
 
-				// Update the wave text
+				// Mettre à jour le nombre de la vague
 				ssWave << "Wave:" << wave;
 				waveNumberText.setString(ssWave.str());
 
-				// Update the zombies alive text
+				// Mettre a jour le nombre d'énemis vivant
 				ssZombiesAlive << "Zombies:" << numZombiesAlive;
 				zombiesRemainingText.setString(ssZombiesAlive.str());
 
-				// Reset the frame count
+				// Reset la frame
 				framesSinceLastHUDUpdate = 0;
 			}
 			
-		} // End if playing
+		} 
 
 		/*
 		****************
-		Draw the scene
+		Dessiner la scène
 		****************
 		*/ 
 		
@@ -645,20 +646,19 @@ int main()
 		{
 			window.clear();
 
-			// Set the mainView to be displayed in the window
-			// And draw everything related to it
+			// Dessiner la main view
 			window.setView(mainView);
 
-			// Draw the background
+			// Dessiner le background
 			window.draw(background, &textureBackground);
 
-			// Draw the zombies
+			// Desiner les énemis
 			for (int i = 0; i < numZombies; i++)
 			{
 				window.draw(zombies[i].getSprite());
 			} 
 
-			// Draw the bullets
+			// Dessiner les balles
 			for (int i = 0; i < 100; i++)
 			{
 				if (bullets[i].isInFlight())
@@ -667,10 +667,10 @@ int main()
 				}
 			}
 			
-			// Draw the player
+			// Desinner les joueur
 			window.draw(player.getSprite());
 
-			// Draw the pickups, if currently spawned
+			// Deesinner les pick up
 			if (healthPickup.isSpawned())
 			{
 				window.draw(healthPickup.getSprite());
@@ -680,10 +680,10 @@ int main()
 				window.draw(ammoPickup.getSprite());
 			}
 
-			// Draw the crosshair
+			// Dessiner le crosshair
 			window.draw(spriteCrosshair);
 
-			// Switch to the HUD view
+			// Changer de view avec le HUD
 			window.setView(hudView);
 
 			// Draw all the HUD elements
@@ -717,8 +717,8 @@ int main()
 		
 		window.display();
 		
-	} // End main game loop
-	// Delete the previously allocated memory (if it exists)
+	} 
+	// Supprimer la mémoire alloué
 	delete[] zombies;
 	return 0;
 }

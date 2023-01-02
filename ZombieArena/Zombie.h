@@ -6,54 +6,53 @@ using namespace sf;
 class Zombie
 {
 private: 
-	// How fast can each zombie type run?
+	// Vitesse de déplacement des différents énnemis
 	const float BLOATER_SPEED = 40;
 	const float CHASER_SPEED = 80;
 	const float CRAWLER_SPEED = 20;
 	
-	// How tough is each zombie type?
+	// La puissance de frappe des différents énnemis
 	const float BLOATER_HEALTH = 5;
 	const float CHASER_HEALTH = 1;
 	const float CRAWLER_HEALTH = 3;
 
-	// Make each zombie vary its speed slightly
+	// Faire en sorte que chaque énnemis varie légèrement sa vitesse
 	const int MAX_VARRIANCE = 30;
 	const int OFFSET = 101 - MAX_VARRIANCE;
 	
-	// Where is this zombie?
+	// Position de chaque énnemis
 	Vector2f m_Position;
 
-	// A sprite for the zombie
+	// Sprite de chaque énnemis
 	Sprite m_Sprite;
 	
-	// How fast can this one run/crawl?
+	// Vitesse des énnemis
 	float m_Speed;
 
-	// How much health has it got?
+	// Vie des énnemis
 	float m_Health;
 	
-	// Is it still alive?
+	// Est-ce que l'ennemi est en vie ?
 	bool m_Alive;
-	// Public prototypes go here
 
 public:
 	
-	// Handle when a bullet hits a zombie
+	// Fonction qui gere le touché d'une balle sur un énnemis
 	bool hit();
 
-	// Find out if the zombie is alive
+	// Fonction qui verifie si l'ennemi est en vie
 	bool isAlive();
 
-	// Spawn a new zombie
+	// Spawn de chaque énnemis
 	void spawn(float startX, float startY, int type, int seed);
 
-	// Return a rectangle that is the position in the world
+	// Récupérer la position d'un énnemis
 	FloatRect getPosition();
 
-	// Get a copy of the sprite to draw
+	// Récupérer le sprite d'un énnemis pour le dessiner
 	Sprite getSprite();
 
-	// Update the zombie each frame
+	// Mettre a jour de l'énnemi à chaque frame
 	void update(float elapsedTime, Vector2f playerLocation);
 
 };

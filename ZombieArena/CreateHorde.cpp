@@ -3,8 +3,7 @@
 
 Zombie* createHorde(int numZombies, IntRect arena)
 {
-	// Create a pointer to a new array of zombies that can hold
-	// numZombies elements
+	// Tableau de pointeurs qui stock les énemis
 	Zombie* zombies = new Zombie[numZombies];
 	
 	int maxY = arena.height -20;
@@ -12,10 +11,10 @@ Zombie* createHorde(int numZombies, IntRect arena)
 	int maxX = arena.width - 20;
 	int minX = arena.left + 20;
 
-	// Spawn the zombies
+	// Spawn des énemis
 	for (int i = 0; i < numZombies; i++)
 	{
-		// Wich side should the zombie spawn
+		// De quel coté ils spawn
 		srand((int)time(0) * i);
 		int side = (rand() % 4);
 		float x, y;
@@ -48,11 +47,11 @@ Zombie* createHorde(int numZombies, IntRect arena)
 			break;
 		}
 		
-		// Bloater, crawler or runner
+		// Quel type d'énemi spawn
 		srand((int)time(0) * i * 2);
 		int type = (rand() % 3);
 
-		// Spawn the new zombie into the array
+		// Faire spawn l'énemie dans in tableau
 		zombies[i].spawn(x, y, type, i);
 	}
 	return zombies;

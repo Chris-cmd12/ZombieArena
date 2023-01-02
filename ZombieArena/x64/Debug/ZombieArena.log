@@ -1,4 +1,54 @@
-﻿  ZombieArena.cpp
+﻿  Bullet.cpp
+  Pickup.cpp
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Pickup.cpp(27,20): warning C4244: '=' : conversion de 'const int' en 'float', perte possible de données
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Pickup.cpp(28,20): warning C4244: '=' : conversion de 'const int' en 'float', perte possible de données
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Pickup.cpp(53,26): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Pickup.cpp(53,23): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Pickup.cpp(110,34): warning C4244: '+=' : conversion de 'double' en 'int', perte possible de données
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Pickup.cpp(114,32): warning C4244: '+=' : conversion de 'double' en 'int', perte possible de données
+  Player.cpp
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Player.cpp(11,13): warning C4244: '=' : conversion de 'const float' en 'int', perte possible de données
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Player.cpp(12,16): warning C4244: '=' : conversion de 'const float' en 'int', perte possible de données
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Player.cpp(24,29): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Player.cpp(25,30): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Player.cpp(44,13): warning C4244: '=' : conversion de 'const float' en 'int', perte possible de données
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Player.cpp(45,16): warning C4244: '=' : conversion de 'const float' en 'int', perte possible de données
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Player.cpp(146,32): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Player.cpp(150,31): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Player.cpp(154,33): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Player.cpp(158,30): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Player.cpp(162,14): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Player.cpp(172,26): warning C4244: '+=' : conversion de 'double' en 'float', perte possible de données
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Player.cpp(178,31): warning C4244: '+=' : conversion de 'double' en 'int', perte possible de données
+  TextureHolder.cpp
+  Zombie.cpp
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Zombie.cpp(37,17): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\Zombie.cpp(116,14): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+  ZombieArena.cpp
 D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\ZombieArena.cpp(32,56): warning C4244: 'argument' : conversion de 'T' en 'unsigned int', perte possible de données
           with
           [
@@ -14,4 +64,5 @@ D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\ZombieArena.cpp(595,50): warni
           [
               T=float
           ]
+  Génération de code en cours...
   ZombieArena.vcxproj -> D:\Study_Perso\Udemy\SFML\ZombieArena\x64\Debug\ZombieArena.exe

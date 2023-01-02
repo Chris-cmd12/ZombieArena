@@ -6,28 +6,30 @@ using namespace sf;
 class Pickup
 {
 private:
-	// Start value for health pickups
+	// Valeur initial des kit de soin et munitions
 	const int HEALTH_START_VALUE = 50;
-	// Start value for ammo pickups
 	const int AMMO_START_VALUE = 12;
 	
+	// Temps de respawn des kit de soin et munitions
 	const int START_WAIT_TIME = 10;
+	
+	// Temps de vie des kit de soin et munitions
 	const int START_SECONDS_TO_LIVE = 5;
 
-	// The sprite that represents this pickup
+	// Sprite des différent pickup
 	Sprite m_Sprite;
 
-	// The arena it exists in
+	// Arene du jeu
 	IntRect m_Arena;
 	
-	// How much is this pickup worth?
+	// La veleur du pick up
 	int m_Value;
 
-	// What type of pickup is this?
-	// 1 = health, 2 = ammo
+	// Quel type de pickup est-ce ?
+	// 1 = kite de soin, 2 = munitions
 	int m_Type;
 
-	// Handle spawning and disappearing
+	// Variable pour gérer l'apparition des pickup
 	bool m_Spawned;
 	float m_SecondsSinceSpawn;
 	float m_SecondsSinceDeSpawn;
@@ -37,27 +39,27 @@ private:
 public:
 	Pickup(int type);
 
-	// Prepare a new pickup
+	// Préparer un nouveau pickup
 	void setArena(IntRect arena);
 	
 	void spawn();
 
-	// Check the position of a pickup
+	// Verifier la position du pickup
 	FloatRect getPosition();
 
-	// Get the sprite for drawing
+	// Recupérer son sprite pour le dessiner 
 	Sprite getSprite();
 
-	// Let the pickup update itself each frame
+	// Mettre a jour les pickup a chaque frame
 	void update(float elapsedTime);
 	
-	// Is this pickup currently spawned?
+	// Est ce que le pick up a spawn ?
 	bool isSpawned();
 
-	// Get the goodness from the pickup
+	// Récuperation des pickup 
 	int gotIt();
 
-	// Upgrade the value of each pickup
+	// Amelioration des pickup
 	void upgrade();
 };
 

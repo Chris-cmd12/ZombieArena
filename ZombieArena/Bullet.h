@@ -6,23 +6,23 @@ using namespace sf;
 class Bullet
 {
 private:
-	// Where is the bullet?
+	// ou ce position les balles
 	Vector2f m_Position;
 	
-	// What each bullet currently looks like
+	// La forme de la balle et son apparence
 	RectangleShape m_BulletShape;
 	
-	// Is this bullet currently whizzing through the air?
+	// Est-ce que la balle est en mouvement
 	bool m_InFlight = false;
 	
-	// How fast does a bullet travel?
+	// La vitesse de la balle
 	float m_BulletSpeed = 1000;
 	
-	// What fraction of 1 pixel does the bullet travel, horizontally and vertically, each frame?
+	// Quelle fraction de 1 pixel la balle parcourt-elle, horizontalement et verticalement, à chaque image ?
 	float m_BulletDistanceX;
 	float m_BulletDistanceY;
 	
-	// Some boundaries so the bullet doesn't fly forever
+	// bordure pour que la balle disparaisse
 	float m_MaxX;
 	float m_MinX;
 	float m_MaxY;
@@ -31,22 +31,22 @@ private:
 public:
 	Bullet();
 
-	// Stop the bullet
+	// Stop la balle
 	void stop();
 
-	// Returns the value of m_InFlight
+	// Retoune la valeur de m_InFlight
 	bool isInFlight();
 
-	// Launch a new bullet
+	// Tirer une balle
 	void shoot(float startX, float startY, float xTarget, float yTarget);
 
-	// Tell the calling code where the bullet is in the world
+	// Récupération de la position de la balle
 	FloatRect getPosition();
 
-	// Return the actual shape (for drawing)
+	// Retoure la forme de la balle pour la dessiner
 	RectangleShape getShape();
 
-	// Update the bullet each frame
+	// Mettre à jour la balle à chaque frame
 	void update(float elapsedTime);
 };
 

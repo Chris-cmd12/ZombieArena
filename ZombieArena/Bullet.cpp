@@ -1,36 +1,35 @@
 #include "Bullet.h"
 
-// The constructor
 Bullet::Bullet()
 {
-	// Make a 5x5 pixel bullet
+	// Taille de la balle
 	m_BulletShape.setSize(sf::Vector2f(2, 2));
 }
 
 void Bullet::shoot(float startX, float startY, float xTarget, float yTarget){
 
-	// Keep track of the bullet
+	// suivre le déplacement de la balle
 	m_InFlight = true;
 	m_Position.x = startX;
 	m_Position.y = startY;
 
-	// Calculate the gradient of the flight path
+	// Calcule de la trajectoire de la balle
 	float gradient = (startX - xTarget) / (startY - yTarget);
 
-	// Any gradient less than zero needs to be negative
+	// Tout les trajectoires inferrieur a 0 sont négatives
 	if (gradient < 0)
 	{
 		gradient *= -1;
 	}
 
-	// Calculate the ratio between x and y
+	// Calculer le ration entre x et y
 	float ratioXY = m_BulletSpeed / (1 + gradient);
 
-	// Set the "speed" horizontally and vertically
+	// initialiser le vitesses horizontale et verticale de la balle
 	m_BulletDistanceY = ratioXY;
 	m_BulletDistanceX = ratioXY * gradient;
 
-	// Point the bullet in the right direction
+	// Envoyer la balle dans la bonne direction
 	if (xTarget < startX)
 	{
 		m_BulletDistanceX *= -1;
@@ -41,14 +40,14 @@ void Bullet::shoot(float startX, float startY, float xTarget, float yTarget){
 		m_BulletDistanceY *= -1;
 	}
 
-	// Set a max range of 1000 pixels
+	// initialiser la taille maximal
 	float range = 1000;
 	m_MinX = startX - range;
 	m_MaxX = startX + range;
 	m_MinY = startY - range;
 	m_MaxY = startY + range;
 	
-	// Position the bullet ready to be drawn
+	// Positioner la balle qui est pret à être déssiner 
 	m_BulletShape.setPosition(m_Position);
 }
 
@@ -74,14 +73,14 @@ RectangleShape Bullet::getShape()
 
 void Bullet::update(float elapsedTime)
 {
-	// Update the bullet position variables
+	// Mettre a jour la position de la balle
 	m_Position.x += m_BulletDistanceX * elapsedTime;
 	m_Position.y += m_BulletDistanceY * elapsedTime;
 
-	// Move the bullet
+	// Faire bouger la balle
 	m_BulletShape.setPosition(m_Position);
 
-	// Has the bullet gone out of range?
+	// Si la balle sort de l'écran, la stopper
 	if (m_Position.x > m_MaxX || m_Position.x < m_MinX ||
 		m_Position.y > m_MaxY || m_Position.y < m_MinY)
 	{

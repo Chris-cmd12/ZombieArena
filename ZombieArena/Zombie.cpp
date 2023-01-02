@@ -30,24 +30,24 @@ void Zombie::spawn(float startX, float startY, int type, int seed)
 		break;
 	}
 
-	// Modify the speed to make each zombie unique
-	// Every zombie is unique. Create a speed modifier
+	// Modification de la vitesse de l'ennemi
+	// Chaque enemi est unique.
 	srand((int)time(0) * seed);
-	// Somewhere between 80 and 100
+	// Leur différence et entre 80 et 100
 	float modifier = (rand() % MAX_VARRIANCE) + OFFSET;
 
-	// Express this as a fraction of 1
-	modifier /= 100; // now between 0.7 and 1
+	// Ce si et une division par 1
+	modifier /= 100; // la différence de speed et de 0.7 et 1
 	m_Speed *= modifier;
 
-	// Set the position
+	// Position de départ de l'ennemi
 	m_Position.x = startX;
 	m_Position.y = startY;
 
-	// Set the origin of the sprite to the center
+	// Origine du sprite au centre
 	m_Sprite.setOrigin(25, 25);
 
-	// Set the sprite to its new position
+	// Placer son sprite à la bonne position
 	m_Sprite.setPosition(m_Position);
 }
 
@@ -57,13 +57,13 @@ bool Zombie::hit()
 	
 	if (m_Health < 0)
 	{
-		// dead
+		// mort
 		m_Alive = false;
 		m_Sprite.setTexture(TextureHolder::GetTexture("graphics/blood.png"));
 		return true;
 	}
 
-	// injured but not dead yet
+	// Bléssé mais pas mort
 	return false;
 }
 
@@ -84,11 +84,11 @@ Sprite Zombie::getSprite()
 
 void Zombie::update(float elapsedTime, Vector2f playerLocation)
 {
-	// Update the zombie position variables
+	// Mettre a jour la position de l'énemi
 	float playerX = playerLocation.x;
 	float playerY = playerLocation.y;
 
-	// Update the zombie position variables
+	// Mettre a jour la position de l'énemi
 	if (playerX > m_Position.x)
 	{
 		m_Position.x = m_Position.x + m_Speed * elapsedTime;
@@ -109,10 +109,10 @@ void Zombie::update(float elapsedTime, Vector2f playerLocation)
 		m_Position.y = m_Position.y - m_Speed * elapsedTime;
 	}
 
-	// Move the sprite
+	// Déplacer le sprite
 	m_Sprite.setPosition(m_Position);
 
-	// Face the sprite in the correct direction
+	// Tourner le sprite vers le joueur
 	float angle = (atan2(playerY - m_Position.y, playerX - m_Position.x) * 180) / 3.141;
 	
 	m_Sprite.setRotation(angle);
