@@ -1,0 +1,17 @@
+﻿  ZombieArena.cpp
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\ZombieArena.cpp(32,56): warning C4244: 'argument' : conversion de 'T' en 'unsigned int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\ZombieArena.cpp(32,42): warning C4244: 'argument' : conversion de 'T' en 'unsigned int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\Study_Perso\Udemy\SFML\ZombieArena\ZombieArena\ZombieArena.cpp(595,50): warning C4244: 'argument' : conversion de 'double' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+  ZombieArena.vcxproj -> D:\Study_Perso\Udemy\SFML\ZombieArena\x64\Debug\ZombieArena.exe
