@@ -14,26 +14,26 @@
 using namespace sf;
 using namespace std;
 
-int main() 
+int main()
 {
 	// Instancier un objet de la classe TextureHolder
 	TextureHolder holder;
-	
+
 	// 4 différents états du jeu
-	enum class State{ PAUSED, LEVELING_UP, GAME_OVER, PLAYING };
+	enum class State { PAUSED, LEVELING_UP, GAME_OVER, PLAYING };
 	// Le jeu commence dans l'état GAME_OVER
 	State state = State::GAME_OVER;
-	
+
 	// Résolution de la fenêtre
 	Vector2f resolution;
 	resolution.x = 800;
 	resolution.y = 800;
-	
+
 	RenderWindow window(VideoMode(resolution.x, resolution.y), "Zombie Arena");
-	
+
 	// Création de la vue principale
 	View mainView(sf::FloatRect(0, 0, resolution.x, resolution.y));
-	
+
 	// Creation d'un objet Clock pour mesurer le temps
 	Clock clock;
 	// Temps écoulé depuis que le jeu est dans l'état PLAYING
@@ -46,7 +46,7 @@ int main()
 
 	// Création d'un objet Player
 	Player player;
-	
+
 	// Bordure de l'arene
 	IntRect arena;
 
@@ -54,12 +54,12 @@ int main()
 	VertexArray background;
 	// Load la texture du background
 	Texture textureBackground = TextureHolder::GetTexture("graphics/background_sheet.png");
-	
+
 	// Variables pour le nombre de zombies
 	int numZombies;
 	int numZombiesAlive;
 	Zombie* zombies = nullptr;
-	
+
 	// Variable pour le nombre de munitions
 	Bullet bullets[100];
 	int currentBullet = 0;
@@ -69,7 +69,7 @@ int main()
 	float fireRate = 1;
 	// Quand le joueur a t'il tiré la dernière fois ?
 	Time lastPressed;
-	
+
 	// Cacher le pointeur de la souris et le remplacer par un curseur
 	window.setMouseCursorVisible(false);
 	Sprite spriteCrosshair;
@@ -91,7 +91,7 @@ int main()
 	Texture textureGameOver = TextureHolder::GetTexture("graphics/background.png");
 	spriteGameOver.setTexture(textureGameOver);
 	spriteGameOver.setPosition(0, 0);
-	
+
 	// HUD
 	View hudView(sf::FloatRect(0, 0, resolution.x, resolution.y));
 
@@ -99,7 +99,7 @@ int main()
 	Sprite spriteAmmoIcon;
 	Texture textureAmmoIcon = TextureHolder::GetTexture("graphics/ammo_icon.png");
 	spriteAmmoIcon.setTexture(textureAmmoIcon);
-	spriteAmmoIcon.setPosition(20, 490);
+	spriteAmmoIcon.setPosition(660, 750);
 
 	// Load font
 	Font font;
@@ -120,6 +120,36 @@ int main()
 	gameOverText.setFillColor(Color::White);
 	gameOverText.setPosition(280, 540);
 	gameOverText.setString("Press Enter to play");
+
+	//set Text Z,Q,S,D
+	Text txtZ;
+	txtZ.setFont(font);
+	txtZ.setCharacterSize(25);
+	txtZ.setFillColor(Color::White);
+	txtZ.setPosition(50, 725);
+	txtZ.setString("Z");
+
+	Text txtQ;
+	txtQ.setFont(font);
+	txtQ.setCharacterSize(25);
+	txtQ.setFillColor(Color::White);
+	txtQ.setPosition(25, 750);
+	txtQ.setString("Q");
+
+	Text txtS;
+	txtS.setFont(font);
+	txtS.setCharacterSize(25);
+	txtS.setFillColor(Color::White);
+	txtS.setPosition(50, 750);
+	txtS.setString("S");
+
+	Text txtD;
+	txtD.setFont(font);
+	txtD.setCharacterSize(25);
+	txtD.setFillColor(Color::White);
+	txtD.setPosition(75, 750);
+	txtD.setString("D");
+
 
 	// Niveau augmenter
 	Text levelUpText;
@@ -142,7 +172,7 @@ int main()
 	ammoText.setFont(font);
 	ammoText.setCharacterSize(28);
 	ammoText.setFillColor(Color::White);
-	ammoText.setPosition(200, 480);
+	ammoText.setPosition(720, 770);
 
 	// Score
 	Text scoreText;
@@ -150,7 +180,7 @@ int main()
 	scoreText.setCharacterSize(28);
 	scoreText.setFillColor(Color::White);
 	scoreText.setPosition(10, 0);
-	
+
 	// CHarger le fichier du meilleur score
 	ifstream inputFile("gamedata/scores.txt");
 	if (inputFile.is_open())
@@ -164,7 +194,7 @@ int main()
 	hiScoreText.setFont(font);
 	hiScoreText.setCharacterSize(25);
 	hiScoreText.setFillColor(Color::White);
-	hiScoreText.setPosition(480, 0);
+	hiScoreText.setPosition(380, 0);
 	stringstream s;
 	s << "Hi Score:" << hiScore;
 	hiScoreText.setString(s.str());
@@ -174,7 +204,7 @@ int main()
 	zombiesRemainingText.setFont(font);
 	zombiesRemainingText.setCharacterSize(22);
 	zombiesRemainingText.setFillColor(Color::White);
-	zombiesRemainingText.setPosition(975, 310);
+	zombiesRemainingText.setPosition(150, 0);
 	zombiesRemainingText.setString("Zombies: 100");
 
 	// Vague enemie
@@ -183,14 +213,14 @@ int main()
 	waveNumberText.setFont(font);
 	waveNumberText.setCharacterSize(25);
 	waveNumberText.setFillColor(Color::White);
-	waveNumberText.setPosition(20, 310);
+	waveNumberText.setPosition(17, 30);
 	waveNumberText.setString("Wave: 0");
 
 	// Bare de vie 
 	RectangleShape healthBar;
 	healthBar.setFillColor(Color::Red);
-	healthBar.setPosition(150, 310);
-	
+	healthBar.setPosition(150, 750);
+
 	// QUand on a update le HUD la dernier foi
 	int framesSinceLastHUDUpdate = 0;
 
@@ -226,7 +256,7 @@ int main()
 	reloadFailedBuffer.loadFromFile("sound/reload_failed.wav");
 	Sound reloadFailed;
 	reloadFailed.setBuffer(reloadFailedBuffer);
-	
+
 	// Préparer le son de power up
 	SoundBuffer powerupBuffer;
 	powerupBuffer.loadFromFile("sound/powerup.wav");
@@ -238,16 +268,16 @@ int main()
 	pickupBuffer.loadFromFile("sound/pickup.wav");
 	Sound pickup;
 	pickup.setBuffer(pickupBuffer);
-		
+
 	// main game loop
 	while (window.isOpen()) {
-		
+
 		/*
-		************************ 
+		************************
 		Gestion des input
 		************************
-		*/ 
-		
+		*/
+
 		Event event;
 		while (window.pollEvent(event))
 		{
@@ -284,7 +314,7 @@ int main()
 					// Reset le joueur
 					player.resetPlayerStats();
 				}
-				
+
 				if (state == State::PLAYING)
 				{
 					// Reloading
@@ -313,50 +343,59 @@ int main()
 				}
 			}
 		}
-		
+
 		// Gerer les input pour quitter le jeu
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
 			window.close();
 		}
-		
+
 		// Gerer les input quand on est en cour de jeu 
-		if (state == State::PLAYING){
+		if (state == State::PLAYING) {
 			// Gestion des input pour le déplacement du joueur ZQSD
 			if (Keyboard::isKeyPressed(Keyboard::Z))
 			{
 				player.moveUp();
+				txtZ.setFillColor(Color::Red);
 			}
 			else
 			{
 				player.stopUp();
+				txtZ.setFillColor(Color::White);
 			}
-			
+
 			if (Keyboard::isKeyPressed(Keyboard::S))
 			{
 				player.moveDown();
+				txtS.setFillColor(Color::Red);
 			}
 			else
 			{
 				player.stopDown();
+				txtS.setFillColor(Color::White);
 			}
 
 			if (Keyboard::isKeyPressed(Keyboard::Q))
 			{
 				player.moveLeft();
+				txtQ.setFillColor(Color::Red);
 			}
 			else
 			{
 				player.stopLeft();
+				txtQ.setFillColor(Color::White);
 			}
 
 			if (Keyboard::isKeyPressed(Keyboard::D))
 			{
 				player.moveRight();
+				txtD.setFillColor(Color::Red);
 			}
 			else
 			{
 				player.stopRight();
+				txtD.setFillColor(Color::White);
+
 			}
 
 			// Tirer une balle
@@ -366,22 +405,22 @@ int main()
 				{
 					//Passer le centre du joueur et le centre du crosshair dans la fonction shoot
 					bullets[currentBullet].shoot(player.getCenter().x, player.getCenter().y, mouseWorldPosition.x, mouseWorldPosition.y);
-					
+
 					currentBullet++;
 					if (currentBullet > 99)
 					{
 						currentBullet = 0;
 					}
 					lastPressed = gameTimeTotal;
-					
+
 					shoot.play();
 
 					bulletsInClip--;
 				}
-			} 
+			}
 
 		}
-		
+
 		// Gerer l'état LEVELING_UP
 		if (state == State::LEVELING_UP)
 		{
@@ -392,14 +431,14 @@ int main()
 				fireRate++;
 				state = State::PLAYING;
 			}
-			
+
 			if (event.key.code == Keyboard::Num2)
 			{
 				// Augmenter la capaciter du chargeur
 				clipSize += clipSize;
 				state = State::PLAYING;
 			}
-			
+
 			if (event.key.code == Keyboard::Num3)
 			{
 				// Augmenter la vie du joueur
@@ -427,7 +466,7 @@ int main()
 				ammoPickup.upgrade();
 				state = State::PLAYING;
 			}
-			
+
 			if (state == State::PLAYING)
 			{
 				// Augmenter le nombre de vague
@@ -435,10 +474,10 @@ int main()
 
 				// Preparer le niveau
 				arena.width = 500 * wave;
-				arena.height = 500* wave;
+				arena.height = 500 * wave;
 				arena.left = 0;
 				arena.top = 0;
-				
+
 				int tileSize = createBackground(background, arena);
 
 				// Faire spawn le joueur au milieu de l'aréne
@@ -458,7 +497,7 @@ int main()
 
 				// Jouer le son du power up
 				powerup.play();
-				
+
 				// Reset la clock pour eviter les saut d'image
 				clock.restart();
 			}
@@ -477,22 +516,22 @@ int main()
 			gameTimeTotal += dt;
 			// Fraction decimale de 1 sur le delta time
 			float dtAsSeconds = dt.asSeconds();
-			
+
 			// Ou est pointer la souris 
 			mouseScreenPosition = Mouse::getPosition();
-			
+
 			// Convertir la position de la souris en coordonné du monde
 			mouseWorldPosition = window.mapPixelToCoords(Mouse::getPosition(), mainView);
-			
+
 			// Mettre le crosshair a la position de la souris
 			spriteCrosshair.setPosition(mouseWorldPosition);
 
 			// Mettre a jour le joueur 
 			player.update(dtAsSeconds, Mouse::getPosition());
-			
+
 			// Prendre en note la nouvelle position du joueur 
 			Vector2f playerPosition(player.getCenter());
-			
+
 			// Mettre la vue principale au centre du joueur
 			mainView.setCenter(player.getCenter());
 
@@ -517,7 +556,7 @@ int main()
 			//	Mettre a jour les pickup
 			healthPickup.update(dtAsSeconds);
 			ammoPickup.update(dtAsSeconds);
-	
+
 			// Deterction des collision
 			// Est ce que l'énemis a été touché
 			for (int i = 0; i < 100; i++) {
@@ -541,7 +580,7 @@ int main()
 								}
 
 								numZombiesAlive--;
-								
+
 								// quand les enemis sont mort
 								if (numZombiesAlive == 0)
 								{
@@ -553,8 +592,8 @@ int main()
 						}
 					}
 				}
-			} 
-			
+			}
+
 			// Faire que tout les zombie a toucher le joueur
 			for (int i = 0; i < numZombies; i++)
 			{
@@ -574,7 +613,7 @@ int main()
 						outputFile.close();
 					}
 				}
-			} 
+			}
 
 			//	Est ce que le joueur a toucher un kit de soin
 			if (player.getPosition().intersects(healthPickup.getPosition()) && healthPickup.isSpawned())
@@ -633,15 +672,15 @@ int main()
 				// Reset la frame
 				framesSinceLastHUDUpdate = 0;
 			}
-			
-		} 
+
+		}
 
 		/*
 		****************
 		Dessiner la scène
 		****************
-		*/ 
-		
+		*/
+
 		if (state == State::PLAYING)
 		{
 			window.clear();
@@ -656,7 +695,7 @@ int main()
 			for (int i = 0; i < numZombies; i++)
 			{
 				window.draw(zombies[i].getSprite());
-			} 
+			}
 
 			// Dessiner les balles
 			for (int i = 0; i < 100; i++)
@@ -666,7 +705,7 @@ int main()
 					window.draw(bullets[i].getShape());
 				}
 			}
-			
+
 			// Desinner les joueur
 			window.draw(player.getSprite());
 
@@ -674,7 +713,7 @@ int main()
 			if (healthPickup.isSpawned())
 			{
 				window.draw(healthPickup.getSprite());
-			}		
+			}
 			if (ammoPickup.isSpawned())
 			{
 				window.draw(ammoPickup.getSprite());
@@ -694,6 +733,10 @@ int main()
 			window.draw(waveNumberText);
 			window.draw(zombiesRemainingText);
 			window.draw(healthBar);
+			window.draw(txtZ);
+			window.draw(txtQ);
+			window.draw(txtS);
+			window.draw(txtD);
 		}
 
 		if (state == State::LEVELING_UP)
@@ -701,12 +744,12 @@ int main()
 			window.draw(spriteGameOver);
 			window.draw(levelUpText);
 		}
-		
+
 		if (state == State::PAUSED)
 		{
 			window.draw(pausedText);
 		}
-		
+
 		if (state == State::GAME_OVER)
 		{
 			window.draw(spriteGameOver);
@@ -714,10 +757,10 @@ int main()
 			window.draw(scoreText);
 			window.draw(hiScoreText);
 		}
-		
+
 		window.display();
-		
-	} 
+
+	}
 	// Supprimer la mémoire alloué
 	delete[] zombies;
 	return 0;
